@@ -1,8 +1,9 @@
-import { Collection, type Document, type WithId, type GridFSBucket, type SortDirection } from "mongodb";
+import { Collection, type Document, type WithId, type SortDirection } from "mongodb";
 import { faker } from "@faker-js/faker";
 import { v4 as uuidv4 } from "uuid";
 import { accountIsValid } from "./accountSystem";
-
+import { writeFileSync } from "fs";
+import { genBrowserToken } from "./dataGen";
 
 // BUNCH OF FAKE IMAGES
 import image1 from "/src/lib/assets/fakeCars/image1.jpeg";
@@ -144,7 +145,14 @@ export async function deleteCar(carSold: boolean, accountDB: Collection, carDB: 
     }
 }
 
-
+// * Uploads a the image file to assets/carImages and returns the path 
+export async function uploadCarImage(fileToUpload: File): Promise<string> {
+    let imageName = genBrowserToken();
+    let fileExtension = fileToUpload.name.split('.').pop();
+    let pathName = `/src/lib/assets/carImages/${imageName}.${fileExtension}`;
+    writeFileSync(pathName, Buffer.from(await fileToUpload.arrayBuffer()));
+    return pathName;
+}
 
 
 async function shuffleArray(array: Array<any>): Promise<Array<any>>{

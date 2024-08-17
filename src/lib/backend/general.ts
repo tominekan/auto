@@ -1,6 +1,4 @@
 // COMMON FUNCTIONS USED ACROSS SEVERAL FILES
-import { writeFileSync } from "fs";
-import { genBrowserToken } from "./dataGen";
 
 // * This just basically stores the unique Id of the car, then let's the backend pull car info based on the car's unique Id
 export async function saveCarProfile(carId: string) {
@@ -23,13 +21,4 @@ export function getSavedCars() {
     if (savedCars != undefined) {
         return JSON.parse(savedCars);
     }
-}
-
-// * Uploads a the image file to assets/carImages and returns the path 
-export async function uploadCarImage(fileToUpload: File): Promise<string> {
-    let imageName = genBrowserToken();
-    let fileExtension = fileToUpload.name.split('.').pop();
-    let pathName = `/src/lib/assets/carImages/${imageName}.${fileExtension}`;
-    writeFileSync(pathName, Buffer.from(await fileToUpload.arrayBuffer()));
-    return pathName;
 }
